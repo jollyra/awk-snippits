@@ -1,2 +1,2 @@
 Print the first field of each record in a file
-awk -F, '{ print $1 }' < newpopulation_bchydro_20160125164845.csv
+awk -F, '{ print $1 }' < data.csv
