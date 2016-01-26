@@ -8,3 +8,7 @@ String concatination operator is the space.
 
 Surround data in bars using Field Sep and Var Flag
 awk -F, -v q="|" '{print q $1 q $2 q nl}' data.csv
+
+Get unique values from a column
+... | sort | uniq
+sort is a prerequisite of uniq which is unfortunate for large data sets
