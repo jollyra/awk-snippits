@@ -1,2 +1,10 @@
 Print the first field of each record in a file
 awk -F, '{ print $1 }' < data.csv
+
+String concatination operator is the space.
+
+-F is the Field Separator
+-v Var Assignment Flag e.g. -v q="|"
+
+Surround data in bars using Field Sep and Var Flag
+awk -F, -v q="|" '{print q $1 q $2 q nl}' data.csv
