@@ -1,13 +1,15 @@
 var https = require('https');
 
 const apikey = '40f908637aba1d813c19119ff50aa1b20e0e925a';
+const baseurl = 'api.stockfighter.io';
 
 module.exports = {
   placeOrder: placeOrder,
   listStocksByVenue: listStocksByVenue,
   getQuote: getQuote,
   getOrderbook: getOrderbook,
-  placeOrder: placeOrder
+  placeOrder: placeOrder,
+  orderStatus: orderStatus
 };
 
 function get(url) {
@@ -30,26 +32,30 @@ function get(url) {
 }
 
 function listStocksByVenue(venue) {
-  return get(`https://api.stockfighter.io/ob/api/venues/${venue}/stocks`);
+  return get(`${baseurl}/ob/api/venues/${venue}/stocks`);
 }
 
 function getQuote(venue, stock) {
-  return get(`http https://api.stockfighter.io/ob/api/venues/${venue}/stocks/${stock}/quote`);
+  return get(`${baseurl}/ob/api/venues/${venue}/stocks/${stock}/quote`);
 }
 
 function getOrderbook(venue, stock) {
-  return get(`https://api.stockfighter.io/ob/api/venues/${venue}/stocks/${stock}`);
+  return get(`${baseurl}/ob/api/venues/${venue}/stocks/${stock}`);
 }
 
 function hearbeat() {
-  return get('https://api.stockfighter.io/ob/api/venues/TESTEX/heartbeat');
+  return get('${baseurl}/ob/api/venues/TESTEX/heartbeat');
+}
+
+function orderStatus(id, venue, stock) {
+  return get(`${baseurl}/ob/api/venues/${venue}/stocks/${stock}/orders/${id}`);
 }
 
 function placeOrder(order) {
   return new Promise(function (resolve, reject) {
 
     var options = {
-      hostname: 'api.stockfighter.io',
+      hostname: baseurl,
       path: `/ob/api/venues/${order.venue}/stocks/${order.stock}/orders`,
       method: 'POST',
       agent: false,
@@ -60,7 +66,7 @@ function placeOrder(order) {
     };
 
     var req = https.request(options, (res) => {
-      console.log(`STATUS: ${res.statusCode}`);
+      // console.log(`STATUS: ${res.statusCode}`);
       res.setEncoding('utf8');
       var body = "";
       res.on('data', (chunk) => {
