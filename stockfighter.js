@@ -1,91 +1,36 @@
-var https = require('https');
+var client = require('./stockfighterClient');
 
-function get(url) {
-  return new Promise(function (resolve, reject) {
-    https.get(url, function (res) {
-      var body = "";
 
-      res.on('data', function (d) {
-        body += d;
-      });
+var test = {
+  accounts: 'EXB123456',
+  venue: 'TESTEX',
+  stock: 'FOOBAR'
+};
 
-      res.on('end', function () {
-        resolve(body);
-      });
-
-    }).on('error', function (e) {
-      reject(e);
-    });
-  });
-}
-
-function placeOrder(order) {
-  return new Promise(function (resolve, reject) {
-
-    var options = {
-      hostname: 'api.stockfighter.io',
-      path: `/ob/api/venues/${order.venue}/stocks/${order.stock}/orders`,
-      method: 'POST',
-      agent: false,
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Starfighter-Authorization': '40f908637aba1d813c19119ff50aa1b20e0e925a'
-      }
-    };
-
-    var req = https.request(options, (res) => {
-      console.log(`STATUS: ${res.statusCode}`);
-      // console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
-      //
-      res.setEncoding('utf8');
-      var body = "";
-      res.on('data', (chunk) => {
-        body += chunk;
-      });
-
-      res.on('end', () => {
-        resolve(body);
-      });
-    });
-
-    req.on('error', (e) => {
-      reject(e);
-    });
-
-    // write data to request body
-    req.write(JSON.stringify(order));
-    req.end();
-  });
-}
-
-var api = {
-  hearbeat: function () {
-    'https://api.stockfighter.io/ob/api/venues/TESTEX/heartbeat'
-  },
-  listStocksByVenue: function (venue) {
-    return `https://api.stockfighter.io/ob/api/venues/${venue}/stocks`;
-  },
-  getQuote: function (venue, stock) {
-    return `http https://api.stockfighter.io/ob/api/venues/${venue}/stocks/${stock}/quote`;
-  },
-  getOrderbook: function (venue, stock) {
-    return `https://api.stockfighter.io/ob/api/venues/${venue}/stocks/${stock}`;
-  }
-}
-
-// get(api.getOrderbook('TESTEX', 'FOOBAR')).then(function (res) {
-//   console.log(res);
-// });
+var live = {
+  account: 'HAP83466447',
+  venue: 'BMHKEX',
+  stock: 'EZQE'
+};
 
 var order = {
-  'account': 'EXB123456',
-  'venue': 'TESTEX',
-  'stock': 'FOOBAR',
-  'qty': 100,
+  'account': test.account,
+  'venue': test.venue,
+  'stock': test.stock,
+  'qty': 1000,
+  'price': 5000,
   'direction': 'buy',
   'orderType': 'limit'
 }
 
-placeOrder(order).then(function (res) {
-  console.log(res);
-});
+var i = 0;
+while (i < 1) {
+  setTimeout(function() {
+    client.placeOrder(order).then(function (res) {
+      console.log(res);
+    }).catch(err => {
+      throw `Something went pear-shaped: ${err}`;
+    });
+  }, 500);
+  i++;
+}
