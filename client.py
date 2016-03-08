@@ -1,4 +1,5 @@
 import requests
+import json
 
 
 apikey = '40f908637aba1d813c19119ff50aa1b20e0e925a'
@@ -16,7 +17,6 @@ def stocks(venue):
 def orderbook(venue, symbol):
   r = requests.get('https://api.stockfighter.io/ob/api/venues/%s/stocks/%s' % (venue, symbol))
   orderbook = r.json()
-  print(orderbook['ok'])
   return orderbook
 
 def quote(venue, symbol):
@@ -39,9 +39,8 @@ def placeOrder(order):
       'Content-Type': 'application/json',
       'X-Starfighter-Authorization': apikey
   }
-  r = requests.post(url, headers=headers, data=order)
+  r = requests.post(url, headers=headers, data=json.dumps(order))
   confirmation = r.json()
-  print(confirmation['ok'])
   return confirmation
 
 
