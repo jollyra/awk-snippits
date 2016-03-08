@@ -26,6 +26,10 @@ def quote(venue, symbol):
   print(quote['ok'])
   return quote
 
+def orderStatus(orderId, venue, symbol):
+  r = requests.get('https://api.stockfighter.io/ob/api/venues/%s/stocks/%s/orders/%s' % (venue, symbol, orderId))
+  return r.json()
+
 def placeOrder(order):
   url = 'https://api.stockfighter.io/ob/api/venues/%s/stocks/%s/orders' % (order['venue'], order['stock'])
   headers = {
