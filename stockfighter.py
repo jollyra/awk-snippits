@@ -18,12 +18,16 @@ If the book is empty lowball
 while count < 100000:
   orderbook = client.orderbook(venue, stock)
   price = 0
-  if orderbook['bids'][0]:
-    bestAsk = orderbook['bids'][0]
+  if orderbook['asks']:
+    bestAsk = orderbook['asks'][0]
     price = bestAsk['price']
-  elif orderbook['asks']:
-    bestBid = orderbook['asks'][0]
+    qty = bestAsk['qty']
+
+  elif orderbook['bids'][0]:
+    bestBid = orderbook['bids'][0]
     price = bestBid['price'] + 1
+    qty = 10
+
   else:
     price = 1
 
@@ -31,7 +35,7 @@ while count < 100000:
     'account': account,
     'venue': venue,
     'stock': stock,
-    'qty': 10,
+    'qty': qty,
     'price': price,
     'direction': 'buy',
     'orderType': 'limit'
