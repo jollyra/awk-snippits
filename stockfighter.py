@@ -30,6 +30,10 @@ def orderStatus(orderId, venue, symbol):
   r = requests.get('https://api.stockfighter.io/ob/api/venues/%s/stocks/%s/orders/%s' % (venue, symbol, orderId))
   return r.json()
 
+def cancelOrder(orderId, venue, symbol):
+  r = requests.delete('https://api.stockfighter.io/ob/api/venues/%s/stocks/%s/orders/%s' % (venue, symbol, orderId))
+  return r.json()
+
 def placeOrder(order):
   url = 'https://api.stockfighter.io/ob/api/venues/%s/stocks/%s/orders' % (order['venue'], order['stock'])
   headers = {
