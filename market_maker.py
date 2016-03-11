@@ -7,10 +7,10 @@ stock ='BWM'
 
 shares = 0  # must be between -1000 and +1000
 net_asset_value = 0  # goal is $10,000
+orders = []
 
 def market_maker():
-  while net_asset_value < 100000:
-    orderbook = client.orderbook(venue, stock)
+  while True:
     price = 0
     if orderbook['asks']:
       best_ask = orderbook['asks'][0]
@@ -36,3 +36,13 @@ def market_maker():
     }
     client.place_order(order)
     count += 1
+
+def bootstrap_market_state(direction):
+  book = client.orderbook(venue, stock)
+  total_price = 0
+  total_qty = 0
+  for bid in book[direction][:2]:
+    total_price += bid['price'] * bid['qty']
+    total_qty += bid['qty']
+  return total_price / total_qty
+
