@@ -1,0 +1,19 @@
+{
+  "ok": true,
+  "venue": "OGEX",
+  "symbol": "FAC",
+  "bids":
+    [
+      {"price": 5200, "qty": 1, "isBuy": true},
+      {"price": 815, "qty": 15, "isBuy": true},
+      {"price": 800, "qty": 12, "isBuy": true},
+      {"price": 800, "qty": 152, "isBuy": true}
+    ],
+  "asks":
+   [
+      {"price": 5205, "qty": 150, "isBuy": false},
+      {"price": 5205, "qty": 1, "isBuy": false},
+      {"price": 1000000000000, "qty": 99999, "isBuy": false}
+   ],
+  "ts": "2015-12-04T09:02:16.680986205Z"
+}
