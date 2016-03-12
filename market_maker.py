@@ -5,10 +5,6 @@ account = 'PAC66537983'
 venue = 'RYMMEX'
 stock ='BWM'
 
-shares = 0  # must be between -1000 and +1000
-net_asset_value = 0  # goal is $10,000
-open_orders = []  # keep track of my position in the market
-spread = 10
 """
 Algorithm:
   init baseline
@@ -27,22 +23,19 @@ Now in plain ambiguous English:
   repeat
 """
 def market_maker():
+  shares = 0  # must be between -1000 and +1000
+  net_asset_value = 0  # goal is $10,000
+  open_orders = []  # keep track of my position in the market
+  spread = 10
+  qty = 1;
+
+  orderbook = client.orderbook(venue, stock)
+  p0 = bootstrap_market_state('bids', orderbook)
+
   while True:
-    price = 0
-    if orderbook['asks']:
-      best_ask = orderbook['asks'][0]
-      price = best_ask['price']
-      qty = best_ask['qty']
+    # something
 
-    elif orderbook['bids'][0]:
-      best_bid = orderbook['bids'][0]
-      price = best_bid['price'] + 1
-      qty = 10
 
-    else:
-      price = 1
-
-    count += 1
 
 
 # book = client.orderbook(venue, stock)
