@@ -29,22 +29,21 @@ spread = 5
 qty = 1;
 def market_maker():
   orders = []  # open orders
-  tape = []  # filled orders
+  tape = []  # filled orders E.g {price: 33, qty: 1, ts: something}
+  inventory = []  # how invested am I currently
 
   orderbook = client.orderbook(venue, stock)
-  p0 = bootstrap_market_state('bids', orderbook)
+  bid_p = bootstrap_market_state('bids', orderbook)
+  ask_p = bootstrap_market_state('asks', orderbook)
+  spread = ask_p - bid_p
 
   while True:
-    # how cheap can we buy?
-    bid_prices = [x + p0 for s in range(spread)]
-    for bid_price in bid_prices:
-      place_bid(qty, bid_price)
+    open_orders.append(place_bid(qty, bid_p))
+    open_orders.append(place_ask(qty, ask_p))
 
-    update_orders(orders)
+    update_position()
 
-
-
-def update_orders(orders):
+def update_orders():
   for order in orders:
     order_status = client.order_status(order['id'], venue, stock)
     if len(order_status['fills']) > 0:
@@ -70,10 +69,10 @@ def place_bid(qty, price):
     'orderType': 'limit'
   }
   order_status = client.place_order(order)
-  if order_status['ok'] == 'true':
-    open_orders.append()
-  else:
+  if order_status['ok'] != 'true':
     print('Order invalid: %s' % order)
+  else:
+    return order_status
 
 def place_ask(qty, price):
   order = {
@@ -86,7 +85,7 @@ def place_ask(qty, price):
     'orderType': 'limit'
   }
   order_status = client.place_order(order)
-  if order_status['ok'] == 'true':
-    open_orders.append()
-  else:
+  if order_status['ok'] != 'true':
     print('Order invalid: %s' % order)
+  else:
+    return order_status
