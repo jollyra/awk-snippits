@@ -1,51 +1,25 @@
 import client
+from time import sleep
 
 
-account = 'PAC66537983'
-venue = 'RYMMEX'
-stock ='BWM'
+account = 'MYC23658935'
+venue = 'KDEX'
+stock ='FPCM'
 
-""" Algorithm
-get a quote for the stock
-buy or sell depending on position
-wait a bit
-check orders for fills and update state
-"""
-
-shares = 0  # must be between -1000 and +1000
-net_asset_value = 0  # goal is $10,000
-spread = 5
-qty = 1;
-def market_maker():
-  orders = []  # open orders
-  tape = []  # filled orders E.g {price: 33, qty: 1, ts: something}
-  inventory = []  # how invested am I currently
-
-  orderbook = client.orderbook(venue, stock)
-  bid_p = bootstrap_market_state('bids', orderbook)
-  ask_p = bootstrap_market_state('asks', orderbook)
-  spread = ask_p - bid_p
-
-  while True:
-    open_orders.append(place_bid(qty, bid_p))
-    open_orders.append(place_ask(qty, ask_p))
-
-    update_position()
-
-def update_orders():
+def check_orders():
+  position = 0
+  res = client.status_for_all_orders(venue, account, stock)
+  orders = res['orders']
   for order in orders:
-    order_status = client.order_status(order['id'], venue, stock)
-    if len(order_status['fills']) > 0:
-      tape.push(order_status['fills'])
+    if order['direction'] == 'buy':
+      position += order['qty']
+    elif order['direction'] == 'sell':
+      position -= order['qty']
+    else:
+      print('Invalid direction:\n %s' % order)
+  return position
 
-# book = client.orderbook(venue, stock)
-def bootstrap_market_state(direction, orderbook):
-  total_price = 0
-  total_qty = 0
-  for bid in orderbook[direction][:2]:
-    total_price += bid['price'] * bid['qty']
-    total_qty += bid['qty']
-  return total_price / total_qty
+
 
 def place_bid(qty, price):
   order = {
@@ -58,8 +32,9 @@ def place_bid(qty, price):
     'orderType': 'limit'
   }
   order_status = client.place_order(order)
-  if order_status['ok'] != 'true':
+  if order_status['ok'] != True:
     print('Order invalid: %s' % order)
+    print('Server response: %s' % order_status)
   else:
     return order_status
 
@@ -70,11 +45,45 @@ def place_ask(qty, price):
     'stock': stock,
     'qty': qty,
     'price': price,
-    'direction': 'ask',
+    'direction': 'sell',
     'orderType': 'limit'
   }
   order_status = client.place_order(order)
-  if order_status['ok'] != 'true':
+  if order_status['ok'] != True:
     print('Order invalid: %s' % order)
+    print('Server response: %s' % order_status)
   else:
     return order_status
+
+
+""" Algorithm
+get a quote for the stock
+buy or sell depending on position
+wait a bit
+check orders for fills and update state
+
+Problem:
+I'm only tracking position, but I need to track cash as well
+"""
+def market_maker():
+  # bootstrap
+  position = -160  # must be between -1000 and +1000
+
+  while True:
+    quote = client.quote(venue, stock)
+    print('position: %s' % position)
+    if position > 0:
+      if 'ask' in quote:
+        price = quote['ask']
+        price -= 5  # buy lower
+        place_ask(10, price)
+    else:
+      if 'bid' in quote:
+        price = quote['bid']
+        price += 5  # sell higher
+        place_bid(10, price)
+    sleep(5) # in seconds
+    position = check_orders()
+
+# Go!
+market_maker()

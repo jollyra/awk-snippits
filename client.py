@@ -21,12 +21,19 @@ def orderbook(venue, symbol):
 
 def quote(venue, symbol):
   r = requests.get('https://api.stockfighter.io/ob/api/venues/%s/stocks/%s/quote' % (venue, symbol))
-  quote = r.json()
-  print(quote['ok'])
-  return quote
+  return r.json()
 
 def order_status(orderId, venue, symbol):
   r = requests.get('https://api.stockfighter.io/ob/api/venues/%s/stocks/%s/orders/%s' % (venue, symbol, orderId))
+  return r.json()
+
+def status_for_all_orders(venue, account, symbol):
+  url = 'https://api.stockfighter.io/ob/api/venues/%s/accounts/%s/stocks/%s/orders' % (venue, account, symbol)
+  headers = {
+      'Content-Type': 'application/json',
+      'X-Starfighter-Authorization': apikey
+  }
+  r = requests.get(url, headers=headers)
   return r.json()
 
 def cancel_order(orderId, venue, symbol):
@@ -35,7 +42,7 @@ def cancel_order(orderId, venue, symbol):
 
 def place_order(order):
   """ Accepts an Order named tuple and returns an Order """
-  url = 'https://api.stockfighter.io/ob/api/venues/%s/stocks/%s/orders' % (order.venue, order.stock)
+  url = 'https://api.stockfighter.io/ob/api/venues/%s/stocks/%s/orders' % (order['venue'], order['stock'])
   headers = {
       'Content-Type': 'application/json',
       'X-Starfighter-Authorization': apikey
