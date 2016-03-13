@@ -5,22 +5,11 @@ account = 'PAC66537983'
 venue = 'RYMMEX'
 stock ='BWM'
 
-"""
-Algorithm:
-  init baseline
-  place asks at price p
-  if p is not filled:
-    place ask at price p + 1
-  else if p is filled:
-    place ask at p - 1
-    place bid at p - spread
-  update baseline
-
-Now in plain ambiguous English:
-  buy some stock as cheap as we can
-  try selling if for as much as possible
-  reduce price until we can sell
-  repeat
+""" Algorithm
+get a quote for the stock
+buy or sell depending on position
+wait a bit
+check orders for fills and update state
 """
 
 shares = 0  # must be between -1000 and +1000
