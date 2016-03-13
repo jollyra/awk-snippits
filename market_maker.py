@@ -22,21 +22,33 @@ Now in plain ambiguous English:
   reduce price until we can sell
   repeat
 """
+
+shares = 0  # must be between -1000 and +1000
+net_asset_value = 0  # goal is $10,000
+spread = 5
+qty = 1;
 def market_maker():
-  shares = 0  # must be between -1000 and +1000
-  net_asset_value = 0  # goal is $10,000
-  open_orders = []  # keep track of my position in the market
-  spread = 10
-  qty = 1;
+  orders = []  # open orders
+  tape = []  # filled orders
 
   orderbook = client.orderbook(venue, stock)
   p0 = bootstrap_market_state('bids', orderbook)
 
   while True:
-    # something
+    # how cheap can we buy?
+    bid_prices = [x + p0 for s in range(spread)]
+    for bid_price in bid_prices:
+      place_bid(qty, bid_price)
+
+    update_orders(orders)
 
 
 
+def update_orders(orders):
+  for order in orders:
+    order_status = client.order_status(order['id'], venue, stock)
+    if len(order_status['fills']) > 0:
+      tape.push(order_status['fills'])
 
 # book = client.orderbook(venue, stock)
 def bootstrap_market_state(direction, orderbook):
@@ -47,7 +59,7 @@ def bootstrap_market_state(direction, orderbook):
     total_qty += bid['qty']
   return total_price / total_qty
 
-def bid(qty, price):
+def place_bid(qty, price):
   order = {
     'account': account,
     'venue': venue,
@@ -63,7 +75,7 @@ def bid(qty, price):
   else:
     print('Order invalid: %s' % order)
 
-def ask(qty, price):
+def place_ask(qty, price):
   order = {
     'account': account,
     'venue': venue,
