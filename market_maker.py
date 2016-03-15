@@ -87,5 +87,7 @@ def market_maker():
     position = check_orders()
     print('round end')
 
+
 # Go!
-market_maker()
+if __name__ == '__main__':
+  market_maker()
