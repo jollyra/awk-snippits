@@ -19,8 +19,6 @@ def check_orders():
       print('Invalid direction:\n %s' % order)
   return position
 
-
-
 def place_bid(qty, price):
   order = {
     'account': account,
@@ -31,6 +29,7 @@ def place_bid(qty, price):
     'direction': 'buy',
     'orderType': 'limit'
   }
+  print('bid: qty %s price %s' % (qty, price))
   order_status = client.place_order(order)
   if order_status['ok'] != True:
     print('Order invalid: %s' % order)
@@ -48,6 +47,7 @@ def place_ask(qty, price):
     'direction': 'sell',
     'orderType': 'limit'
   }
+  print('ask: qty %s price %s' % (qty, price))
   order_status = client.place_order(order)
   if order_status['ok'] != True:
     print('Order invalid: %s' % order)
@@ -67,11 +67,12 @@ I'm only tracking position, but I need to track cash as well
 """
 def market_maker():
   # bootstrap
-  position = -160  # must be between -1000 and +1000
+  position = 0  # must be between -1000 and +1000
 
   while True:
+    print('round start')
+    print('position %s' % position)
     quote = client.quote(venue, stock)
-    print('position: %s' % position)
     if position > 0:
       if 'ask' in quote:
         price = quote['ask']
@@ -84,6 +85,7 @@ def market_maker():
         place_bid(10, price)
     sleep(5) # in seconds
     position = check_orders()
+    print('round end')
 
 # Go!
 market_maker()
