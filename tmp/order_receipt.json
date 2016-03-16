@@ -1,0 +1,16 @@
+{
+  "ok": true,
+  "symbol": "FOOBAR",
+  "venue": "TESTEX",
+  "direction": "buy",
+  "originalQty": 100,
+  "qty": 100,
+  "price": 0,
+  "orderType": "limit",
+  "id": 1208,
+  "account": "EXB123456",
+  "ts": "2016-03-16T06:02:07.755758288Z",
+  "fills": [],
+  "totalFilled": 0,
+  "open": true
+}
