@@ -43,6 +43,12 @@ def place_ask(qty, price):
   else:
     return order_status
 
+def too_short(stocks):
+  return stocks < 100
+
+def too_long(stocks):
+  return stocks > 100
+
 
 """ Algorithm
 get a quote for the stock
@@ -67,19 +73,20 @@ def market_maker():
     print('stocks %s' % stocks)
     print('cash %s' % position.cash_to_str(cash))
     print('# of orders %s' % len(orders))
-    for o in orders:
-      print(o)
     quote = client.quote(venue, stock)
-    if stocks > 0:
+    if too_short(stocks):
       if 'ask' in quote:
         price = quote['ask']
         price -= 5  # buy lower
         orders.append(place_ask(100, price))
-    else:
+    elif too_long(stocks):
       if 'bid' in quote:
         price = quote['bid']
         price += 5  # sell higher
         orders.append(place_bid(100, price))
+    else:
+      return
+
     sleep(5) # in seconds
     print('round end\n')
 
