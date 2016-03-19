@@ -8,8 +8,8 @@ def calculate_position(orders):
   stocks = 0
   cash = 0
   for order in orders:
-    if fills in order:
-      for fill in fills:
+    if 'fills' in order:
+      for fill in order['fills']:
         price = fill['price']
         qty = fill['qty']
         if order['direction'] == 'buy':
@@ -18,6 +18,7 @@ def calculate_position(orders):
         else:
           stocks -= qty
           cash += price * qty
+  return stocks, cash
 
 """
 Calculate NAV based off of a single symbol
