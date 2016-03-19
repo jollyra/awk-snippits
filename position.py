@@ -19,6 +19,13 @@ def calculate_position(orders):
           stocks -= qty
           cash += price * qty
 
+"""
+Calculate NAV based off of a single symbol
+"""
+def calculate_NAV(venue, symbol, stocks, cash):
+  quote = client.quote(venue, symbol)
+  best_bid = quote['bid']
+  return cash + stocks * best_bid
 
 
 """
