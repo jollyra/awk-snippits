@@ -24,7 +24,11 @@ def quote(venue, symbol):
   return r.json()
 
 def order_status(orderId, venue, symbol):
-  r = requests.get('https://api.stockfighter.io/ob/api/venues/%s/stocks/%s/orders/%s' % (venue, symbol, orderId))
+  url = 'https://api.stockfighter.io/ob/api/venues/%s/stocks/%s/orders/%s' % (venue, symbol, orderId)
+  headers = {
+      'X-Starfighter-Authorization': apikey
+  }
+  r = requests.get(url, headers=headers)
   return r.json()
 
 def status_for_all_orders(venue, account, symbol):
