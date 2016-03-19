@@ -28,7 +28,6 @@ def calculate_NAV(venue, symbol, stocks, cash):
   best_bid = quote['bid']
   return cash + stocks * best_bid
 
-
 """
 Return an updated list of orders
 """
@@ -41,3 +40,6 @@ def update(orders):
     order_status = client.order_status(order_id, venue, stock)
     checked_orders.push(order_status)
   return checked_orders
+
+def cash_to_str(cash):
+  print('$%s' % cash / 100)
