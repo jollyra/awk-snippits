@@ -1,5 +1,6 @@
 import client
 
+
 """
 Determine market position based off of filled orders.
 """
@@ -9,7 +10,7 @@ Determine market position based off of filled orders.
 """
 Return an updated list of orders
 """
-def update(self, orders):
+def update(orders):
   checked_orders = []
   for order in orders:
     order_id = order['id']
