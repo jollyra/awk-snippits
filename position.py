@@ -38,8 +38,9 @@ def update(orders):
     venue = order['venue']
     stock = order['symbol']
     order_status = client.order_status(order_id, venue, stock)
-    checked_orders.push(order_status)
+    checked_orders.append(order_status)
   return checked_orders
 
 def cash_to_str(cash):
-  print('$%s' % cash / 100)
+  cash = cash / 100
+  return '$%s' % cash
