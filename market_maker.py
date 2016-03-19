@@ -1,23 +1,11 @@
 import client
+import position
 from time import sleep
 
+account = 'TMB99612289'
+venue = 'GTIEX'
+stock ='SYO'
 
-account = 'MYC23658935'
-venue = 'KDEX'
-stock ='FPCM'
-
-def check_orders():
-  position = 0
-  res = client.status_for_all_orders(venue, account, stock)
-  orders = res['orders']
-  for order in orders:
-    if order['direction'] == 'buy':
-      position += order['qty']
-    elif order['direction'] == 'sell':
-      position -= order['qty']
-    else:
-      print('Invalid direction:\n %s' % order)
-  return position
 
 def place_bid(qty, price):
   order = {
@@ -65,28 +53,35 @@ check orders for fills and update state
 Problem:
 I'm only tracking position, but I need to track cash as well
 """
+
 def market_maker():
   # bootstrap
-  position = 0  # must be between -1000 and +1000
+  stocks = 0  # must be between -1000 and +1000
+  cash = 0    # goal is $10,000
+  orders = []
 
   while True:
     print('round start')
-    print('position %s' % position)
+    orders = position.update(orders)
+    stocks, cash = position.calculate_position(orders)
+    print('stocks %s' % stocks)
+    print('cash %s' % position.cash_to_str(cash))
+    print('# of orders %s' % len(orders))
+    for o in orders:
+      print(o)
     quote = client.quote(venue, stock)
-    if position > 0:
+    if stocks > 0:
       if 'ask' in quote:
         price = quote['ask']
         price -= 5  # buy lower
-        place_ask(10, price)
+        orders.append(place_ask(100, price))
     else:
       if 'bid' in quote:
         price = quote['bid']
         price += 5  # sell higher
-        place_bid(10, price)
+        orders.append(place_bid(100, price))
     sleep(5) # in seconds
-    position = check_orders()
-    print('round end')
-
+    print('round end\n')
 
 # Go!
 if __name__ == '__main__':
