@@ -1,5 +1,5 @@
 import client
-
+from functools import partial
 
 """
 Calculate market position based off of orders
@@ -44,3 +44,8 @@ def update(orders):
 def cash_to_str(cash):
   cash = cash / 100
   return '$%s' % cash
+def get_last_n_orders(n, orders, direction):
+  return list(filter(lambda o: o['direction'] == direction, orders))[-n:]
+
+get_last_n_buys = partial(get_last_n_orders, direction='buy')
+get_last_n_asks = partial(get_last_n_orders, direction='sell')
