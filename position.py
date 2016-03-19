@@ -44,6 +44,32 @@ def update(orders):
 def cash_to_str(cash):
   cash = cash / 100
   return '$%s' % cash
+
+def ask_value(orders):
+  total_price_of_asks = 0
+  num_of_asks = 0
+  asks = get_last_n_asks(5, orders)
+  for ask in asks:
+    if 'fills' in order:
+      for fill in order['fills']:
+        price = fill['price']
+        qty = fill['qty']
+        total_price_of_asks += price * qty
+        num_of_asks += qty
+
+def bid_value(orders):
+  total_price_of_bids = 0
+  num_of_bids = 0
+  bids = get_last_n_bids(5, orders)
+  for ask in bids:
+    if 'fills' in order:
+      for fill in order['fills']:
+        price = fill['price']
+        qty = fill['qty']
+        total_price_of_bids += price * qty
+        num_of_bids += qty
+
+
 def get_last_n_orders(n, orders, direction):
   return list(filter(lambda o: o['direction'] == direction, orders))[-n:]
 
