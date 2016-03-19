@@ -2,8 +2,22 @@ import client
 
 
 """
-Determine market position based off of filled orders.
+Calculate market position based off of orders
 """
+def calculate_position(orders):
+  stocks = 0
+  cash = 0
+  for order in orders:
+    if fills in order:
+      for fill in fills:
+        price = fill['price']
+        qty = fill['qty']
+        if order['direction'] == 'buy':
+          stocks += qty
+          cash -= price * qty
+        else:
+          stocks -= qty
+          cash += price * qty
 
 
 
