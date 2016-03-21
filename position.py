@@ -50,28 +50,35 @@ def ask_value(orders):
   num_of_asks = 0
   asks = get_last_n_asks(5, orders)
   for ask in asks:
-    if 'fills' in order:
-      for fill in order['fills']:
+    if 'fills' in ask:
+      for fill in ask['fills']:
         price = fill['price']
         qty = fill['qty']
         total_price_of_asks += price * qty
         num_of_asks += qty
+  value = None
+  if num_of_asks != 0:
+    value = total_price_of_asks / num_of_asks
+  return value
 
 def bid_value(orders):
   total_price_of_bids = 0
   num_of_bids = 0
   bids = get_last_n_bids(5, orders)
-  for ask in bids:
-    if 'fills' in order:
-      for fill in order['fills']:
+  for bid in bids:
+    if 'fills' in bid:
+      for fill in bid['fills']:
         price = fill['price']
         qty = fill['qty']
         total_price_of_bids += price * qty
         num_of_bids += qty
-
+  value = None
+  if num_of_bids != 0:
+    value = total_price_of_bids / num_of_bids
+  return value
 
 def get_last_n_orders(n, orders, direction):
   return list(filter(lambda o: o['direction'] == direction, orders))[-n:]
 
-get_last_n_buys = partial(get_last_n_orders, direction='buy')
+get_last_n_bids = partial(get_last_n_orders, direction='buy')
 get_last_n_asks = partial(get_last_n_orders, direction='sell')
