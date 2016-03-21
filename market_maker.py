@@ -2,22 +2,22 @@ import client
 import position
 from time import sleep
 
-account = 'TMB99612289'
-venue = 'GTIEX'
-stock ='SYO'
+account = 'BM54105917'
+venue = 'YRPHEX'
+stock ='CIIC'
 
 
-def place_bid(qty, price):
+def sell(qty, price):
   order = {
     'account': account,
     'venue': venue,
     'stock': stock,
     'qty': qty,
-    'price': price,
-    'direction': 'buy',
+    'price': int(price),
+    'direction': 'sell',
     'orderType': 'limit'
   }
-  print('bid: qty %s price %s' % (qty, price))
+  print('sell: qty %s price %s' % (qty, price))
   order_status = client.place_order(order)
   if order_status['ok'] != True:
     print('Order invalid: %s' % order)
@@ -25,17 +25,17 @@ def place_bid(qty, price):
   else:
     return order_status
 
-def place_ask(qty, price):
+def buy(qty, price):
   order = {
     'account': account,
     'venue': venue,
     'stock': stock,
     'qty': qty,
-    'price': price,
-    'direction': 'sell',
+    'price': int(price),
+    'direction': 'buy',
     'orderType': 'limit'
   }
-  print('ask: qty %s price %s' % (qty, price))
+  print('buy: qty %s price %s' % (qty, price))
   order_status = client.place_order(order)
   if order_status['ok'] != True:
     print('Order invalid: %s' % order)
@@ -68,26 +68,33 @@ def market_maker():
 
   while True:
     print('round start')
-    orders = position.update(orders)
-    stocks, cash = position.calculate_position(orders)
+    orders = position.update(orders)  # check the status of orders
+    stocks, cash = position.calculate_position(orders)  # determine market position
     print('stocks %s' % stocks)
     print('cash %s' % position.cash_to_str(cash))
     print('# of orders %s' % len(orders))
-    quote = client.quote(venue, stock)
-    if too_short(stocks):
-      if 'ask' in quote:
-        price = quote['ask']
-        price -= 5  # buy lower
-        orders.append(place_ask(100, price))
-    elif too_long(stocks):
-      if 'bid' in quote:
-        price = quote['bid']
-        price += 5  # sell higher
-        orders.append(place_bid(100, price))
-    else:
-      return
 
-    sleep(5) # in seconds
+    quote = client.quote(venue, stock)
+    if 'ask' in quote:
+      ask_price = quote['ask']
+    else:
+      ask_price = 100
+    if 'bid' in quote:
+      bid_price = quote['bid']
+    else:
+      bid_price = 100
+
+    if too_short(stocks):
+      print('too short')
+      orders.append(buy(25, ask_price - 50))
+    elif too_long(stocks):
+      print('too long')
+      orders.append(sell(25, bid_price + 50))
+    else:
+      orders.append(buy(25, ask_price - 20))
+      orders.append(sell(25, bid_price + 20))
+
+    sleep(6) # in seconds
     print('round end\n')
 
 # Go!
