@@ -1,12 +1,13 @@
 from datetime import datetime
 import client
+import config
 
 
 def order(direction, qty, price):
   order = {
-    'account': account,
-    'venue': venue,
-    'stock': stock,
+    'account': config.account,
+    'venue': config.venue,
+    'stock': config.stock,
     'qty': qty,
     'price': int(price),
     'direction': direction,

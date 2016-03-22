@@ -4,17 +4,12 @@ import client
 import position
 import order
 
-account = 'BM54105917'
-venue = 'YRPHEX'
-stock ='CIIC'
-
 
 def too_short(stocks):
   return stocks < 100
 
 def too_long(stocks):
   return stocks > 100
-
 
 """ Algorithm
 get a quote for the stock
