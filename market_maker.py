@@ -1,33 +1,13 @@
+from time import sleep
+
 import client
 import position
-from time import sleep
-from datetime import datetime
+import order
 
 account = 'BM54105917'
 venue = 'YRPHEX'
 stock ='CIIC'
 
-def order(direction, qty, price):
-  order = {
-    'account': account,
-    'venue': venue,
-    'stock': stock,
-    'qty': qty,
-    'price': int(price),
-    'direction': direction,
-    'orderType': 'limit'
-  }
-  print('%s: qty %s price %s' % (direction, qty, price))
-  order_status = client.place_order(order)
-  if order_status['ok'] != True:
-    print('Order invalid: %s' % order)
-    print('Server response: %s' % order_status)
-  else:
-    order_status['ts'] = datetime.now().time()
-    return order_status
-
-sell = partial(order, direction='sell')
-buy = partial(order, direction='buy')
 
 def too_short(stocks):
   return stocks < 100
@@ -72,13 +52,13 @@ def market_maker():
 
     if too_short(stocks):
       print('too short')
-      orders.append(buy(25, ask_price - 50))
+      orders.append(order.buy(25, ask_price - 50))
     elif too_long(stocks):
       print('too long')
-      orders.append(sell(25, bid_price + 50))
+      orders.append(order.sell(25, bid_price + 50))
     else:
-      orders.append(buy(25, ask_price - 20))
-      orders.append(sell(25, bid_price + 20))
+      orders.append(order.buy(25, ask_price - 20))
+      orders.append(order.sell(25, bid_price + 20))
 
     sleep(6) # in seconds
     print('round end\n')
