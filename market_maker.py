@@ -7,36 +7,17 @@ account = 'BM54105917'
 venue = 'YRPHEX'
 stock ='CIIC'
 
-
-def sell(qty, price):
+def order(direction, qty, price):
   order = {
     'account': account,
     'venue': venue,
     'stock': stock,
     'qty': qty,
     'price': int(price),
-    'direction': 'sell',
+    'direction': direction,
     'orderType': 'limit'
   }
-  print('sell: qty %s price %s' % (qty, price))
-  order_status = client.place_order(order)
-  if order_status['ok'] != True:
-    print('Order invalid: %s' % order)
-    print('Server response: %s' % order_status)
-  else:
-    return order_status
-
-def buy(qty, price):
-  order = {
-    'account': account,
-    'venue': venue,
-    'stock': stock,
-    'qty': qty,
-    'price': int(price),
-    'direction': 'buy',
-    'orderType': 'limit'
-  }
-  print('buy: qty %s price %s' % (qty, price))
+  print('%s: qty %s price %s' % (direction, qty, price))
   order_status = client.place_order(order)
   if order_status['ok'] != True:
     print('Order invalid: %s' % order)
@@ -44,6 +25,9 @@ def buy(qty, price):
   else:
     order_status['ts'] = datetime.now().time()
     return order_status
+
+sell = partial(order, direction='sell')
+buy = partial(order, direction='buy')
 
 def too_short(stocks):
   return stocks < 100
