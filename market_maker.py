@@ -1,6 +1,7 @@
 import client
 import position
 from time import sleep
+from datetime import datetime
 
 account = 'BM54105917'
 venue = 'YRPHEX'
@@ -41,6 +42,7 @@ def buy(qty, price):
     print('Order invalid: %s' % order)
     print('Server response: %s' % order_status)
   else:
+    order_status['ts'] = datetime.now().time()
     return order_status
 
 def too_short(stocks):
