@@ -6,7 +6,7 @@ import order
 
 
 def too_short(stocks):
-  return stocks < 100
+  return stocks < -100
 
 def too_long(stocks):
   return stocks > 100
