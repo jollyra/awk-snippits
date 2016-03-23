@@ -3,6 +3,7 @@ from time import sleep
 import client
 import position
 import order
+import config
 
 
 def too_short(stocks):
@@ -35,7 +36,7 @@ def market_maker():
     print('cash %s' % position.cash_to_str(cash))
     print('# of orders %s' % len(orders))
 
-    quote = client.quote(venue, stock)
+    quote = client.quote(config.venue, config.stock)
     if 'ask' in quote:
       ask_price = quote['ask']
     else:

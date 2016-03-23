@@ -1,9 +1,10 @@
 from datetime import datetime
+from functools import partial
 import client
 import config
 
 
-def order(direction, qty, price):
+def order(qty, price, direction):
   order = {
     'account': config.account,
     'venue': config.venue,
