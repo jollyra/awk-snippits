@@ -26,7 +26,7 @@ def order(qty, price, direction):
 sell = partial(order, direction='sell')
 buy = partial(order, direction='buy')
 
-def cancel_cold_orders(orders, seconds):
+def cancel_cold_orders(orders, seconds_elapsed):
   for order in orders:
     ts = order['ts']
     now = time.time()
