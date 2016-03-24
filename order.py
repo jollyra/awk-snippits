@@ -26,9 +26,8 @@ def order(qty, price, direction):
 sell = partial(order, direction='sell')
 buy = partial(order, direction='buy')
 
+# cancel(filter(is_cold, orders))
 def cancel_cold_orders(orders, seconds_elapsed):
   for order in orders:
-    ts = order['ts']
-    now = time.time()
-    if now - ts > seconds_elapsed:
+    if time.time() - order['ts'] > seconds_elapsed:
       client.cancel_order(order['id'], order['venue'], order['symbol'])
