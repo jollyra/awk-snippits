@@ -1,5 +1,5 @@
-from datetime import datetime
 from functools import partial
+import time
 import client
 import config
 
@@ -20,8 +20,15 @@ def order(qty, price, direction):
     print('Order invalid: %s' % order)
     print('Server response: %s' % order_status)
   else:
-    order_status['ts'] = datetime.now().time()
+    order_status['ts'] = int(time.time())
     return order_status
 
 sell = partial(order, direction='sell')
 buy = partial(order, direction='buy')
+
+def cancel_cold_orders(orders, seconds):
+  for order in orders:
+    ts = order['ts']
+    now = time.time()
+    if now - ts > seconds_elapsed:
+      client.cancel_order(order['id'], order['venue'], order['symbol'])
