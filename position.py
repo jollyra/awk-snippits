@@ -77,8 +77,8 @@ def bid_value(orders):
     value = total_price_of_bids / num_of_bids
   return value
 
-def get_last_n_orders(n, orders, direction):
+def _get_last_n_orders(n, orders, direction):
   return list(filter(lambda o: o['direction'] == direction, orders))[-n:]
 
-get_last_n_bids = partial(get_last_n_orders, direction='buy')
-get_last_n_asks = partial(get_last_n_orders, direction='sell')
+get_last_n_bids = partial(_get_last_n_orders, direction='buy')
+get_last_n_asks = partial(_get_last_n_orders, direction='sell')
