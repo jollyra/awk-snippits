@@ -1,5 +1,6 @@
 from functools import partial
 from time import time
+from datetime import datetime
 import client
 import config
 
@@ -26,13 +27,11 @@ def order(qty, price, direction):
 sell = partial(order, direction='sell')
 buy = partial(order, direction='buy')
 
-def _is_cold(order, cutoff_seconds):
-  return time() - int(order['ts']) > cutoff_seconds
+def _is_cold(now_ts, order_ts, cutoff_seconds):
+  return now_ts - order_ts > cutoff_seconds
 
-def _cancel(orders):
-  for order in orders:
-    client.cancel_order(order['id'], order['venue'], order['symbol'])
+def _cancel(order):
+  client.cancel_order(order['id'], order['venue'], order['symbol'])
 
-def cancel_cold_orders(cold_orders, cutoff_seconds):
-  is_cold = partial(_is_cold, cutoff_seconds=cutoff_seconds)
-  _cancel(filter(is_cold, orders))
+def cancel_cold_orders(orders):
+  [_cancel(order) for order in orders if _is_cold(order)]
