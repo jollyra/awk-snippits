@@ -42,12 +42,12 @@ def test_live_order(monkeypatch):
 def test_live_order_on_boundry(monkeypatch):
   monkeypatch.setattr(time, 'time', lambda: check_ts)
   is_cold = order._is_cold(time.time(), test_order['ts'], seconds(5))
-  assert is_cold == True, "order should be cold on the boundry"
+  assert is_cold == False, "order should be cold on the boundry"
 
 def test_live_order_off_boundry(monkeypatch):
   monkeypatch.setattr(time, 'time', lambda: check_ts)
   is_cold = order._is_cold(time.time(), test_order['ts'], seconds(4))
-  assert is_cold == False, "order should be live off the boundry"
+  assert is_cold == True, "order should be live off the boundry"
 
 def seconds(s):
   return s
