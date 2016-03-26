@@ -29,7 +29,7 @@ check_ts = time.mktime(check_time)
 test_order['ts'] = order_ts
 
 def test_is_cold():
-  assert order.is_cold(test_order, seconds(10)) == False
+  assert order._is_cold(test_order, seconds(10)) == False
 
 def seconds(s):
   return s

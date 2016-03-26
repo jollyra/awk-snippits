@@ -27,10 +27,15 @@ sell = partial(order, direction='sell')
 buy = partial(order, direction='buy')
 
 # cancel(filter(is_cold, orders))
-# def cancel_cold_orders(orders, seconds_elapsed):
-#   for order in orders:
-#     if time.time() - order['ts'] > seconds_elapsed:
-#       client.cancel_order(order['id'], order['venue'], order['symbol'])
 
-def is_cold(order, cutoff_seconds):
+def cancel_cold_orders(cold_orders, cutoff_seconds):
+  is_cold = partial(_is_cold, cutoff_seconds=cutoff_seconds)
+  _cancel(filter(is_cold, orders))
+
+def _is_cold(order, cutoff_seconds):
   return time() - int(order['ts']) > cutoff_seconds
+
+def _cancel(orders):
+  for order in orders:
+    client.cancel_order(order['id'], order['venue'], order['symbol'])
+
