@@ -28,6 +28,8 @@ test_order['ts'] = order_ts
 check_time = time.strptime("20 Dec 2016 17:45:15", "%d %b %Y %H:%M:%S")
 check_ts = time.mktime(check_time)
 
+def seconds(s):
+  return s
 
 def test_cold_order(monkeypatch):
   monkeypatch.setattr(time, 'time', lambda: check_ts)
@@ -48,6 +50,3 @@ def test_live_order_off_boundry(monkeypatch):
   monkeypatch.setattr(time, 'time', lambda: check_ts)
   is_cold = order._is_cold(time.time(), test_order['ts'], seconds(4))
   assert is_cold == True, "order should be live off the boundry"
-
-def seconds(s):
-  return s
