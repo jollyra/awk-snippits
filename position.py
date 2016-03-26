@@ -21,12 +21,11 @@ def calculate_position(orders):
   return stocks, cash
 
 """
-Calculate NAV based off of a single symbol
+Estimate NAV based off of a single symbol and the lastest bid price.
 """
-def calculate_NAV(venue, symbol, stocks, cash):
-  quote = client.quote(venue, symbol)
-  best_bid = quote['bid']
-  return cash + stocks * best_bid
+def calculate_NAV(total_stocks, total_cash, quoted_bid_price):
+  quote_in_dollars = quoted_bid_price / 100.0
+  return total_cash + total_stocks * quote_in_dollars
 
 """
 Return an updated list of orders
