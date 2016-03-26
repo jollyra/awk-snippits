@@ -21,7 +21,6 @@ check orders for fills and update state
 Problem:
 I'm only tracking position, but I need to track cash as well
 """
-
 def market_maker():
   # bootstrap
   stocks = 0  # must be between -1000 and +1000

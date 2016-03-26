@@ -21,7 +21,7 @@ def order(qty, price, direction):
     print('Order invalid: %s' % order)
     print('Server response: %s' % order_status)
   else:
-    order_status['ts'] = int(time.time())
+    order_status['ts'] = time.time()
     return order_status
 
 sell = partial(order, direction='sell')
