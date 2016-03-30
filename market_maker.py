@@ -17,9 +17,6 @@ get a quote for the stock
 buy or sell depending on position
 wait a bit
 check orders for fills and update state
-
-Problem:
-I'm only tracking position, but I need to track cash as well
 """
 def market_maker():
   # bootstrap
@@ -55,6 +52,7 @@ def market_maker():
       orders.append(order.buy(25, ask_price - 20))
       orders.append(order.sell(25, bid_price + 20))
 
+    orders.cancel_cold_orders(orders, 10);
     sleep(6) # in seconds
     print('round end\n')
 
