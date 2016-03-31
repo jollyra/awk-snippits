@@ -6,18 +6,6 @@ import order
 import config
 
 
-def too_short(stocks):
-  return stocks < -100
-
-def too_long(stocks):
-  return stocks > 100
-
-""" Algorithm
-get a quote for the stock
-buy or sell depending on position
-wait a bit
-check orders for fills and update state
-"""
 def market_maker():
   # bootstrap
   stocks = 0  # must be between -1000 and +1000
@@ -31,30 +19,22 @@ def market_maker():
     print('stocks %s' % stocks)
     print('cash %s' % position.cash_to_str(cash))
     print('# of orders %s' % len(orders))
-
-    quote = client.quote(config.venue, config.stock)
-    if 'ask' in quote:
-      ask_price = quote['ask']
-    else:
-      ask_price = 100
-    if 'bid' in quote:
-      bid_price = quote['bid']
-    else:
-      bid_price = 100
-
-    if too_short(stocks):
-      print('too short')
-      orders.append(order.buy(25, ask_price - 50))
-    elif too_long(stocks):
-      print('too long')
-      orders.append(order.sell(25, bid_price + 50))
-    else:
-      orders.append(order.buy(25, ask_price - 20))
-      orders.append(order.sell(25, bid_price + 20))
-
+    orders.append(order.buy(25, ask_price - 20))
+    orders.append(order.sell(25, bid_price + 20))
     orders.cancel_cold_orders(orders, 10);
     sleep(6) # in seconds
     print('round end\n')
+
+def bootstrap():
+  quote = client.quote(config.venue, config.stock)
+  if 'ask' in quote:
+    ask_price = quote['ask']
+  else:
+    ask_price = 100
+  if 'bid' in quote:
+    bid_price = quote['bid']
+  else:
+    bid_price = 100
 
 # Go!
 if __name__ == '__main__':
