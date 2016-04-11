@@ -1,8 +1,7 @@
 import requests
 import json
+import config
 
-
-apikey = '40f908637aba1d813c19119ff50aa1b20e0e925a'
 
 def heartbeat(venue):
   r = requests.get('https://api.stockfighter.io/ob/api/venues/%s/heartbeat' % venue)
@@ -26,7 +25,7 @@ def quote(venue, symbol):
 def order_status(orderId, venue, symbol):
   url = 'https://api.stockfighter.io/ob/api/venues/%s/stocks/%s/orders/%s' % (venue, symbol, orderId)
   headers = {
-      'X-Starfighter-Authorization': apikey
+      'X-Starfighter-Authorization': config.apikey
   }
   r = requests.get(url, headers=headers)
   return r.json()
@@ -35,7 +34,7 @@ def status_for_all_orders(venue, account, symbol):
   url = 'https://api.stockfighter.io/ob/api/venues/%s/accounts/%s/stocks/%s/orders' % (venue, account, symbol)
   headers = {
       'Content-Type': 'application/json',
-      'X-Starfighter-Authorization': apikey
+      'X-Starfighter-Authorization': config.apikey
   }
   r = requests.get(url, headers=headers)
   return r.json()
@@ -49,7 +48,7 @@ def place_order(order):
   url = 'https://api.stockfighter.io/ob/api/venues/%s/stocks/%s/orders' % (order['venue'], order['stock'])
   headers = {
       'Content-Type': 'application/json',
-      'X-Starfighter-Authorization': apikey
+      'X-Starfighter-Authorization': config.apikey
   }
   r = requests.post(url, headers=headers, data=json.dumps(order))
   confirmation = r.json()

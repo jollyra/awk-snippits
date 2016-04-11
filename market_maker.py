@@ -7,7 +7,6 @@ import config
 
 
 def market_maker():
-  # bootstrap
   stocks = 0  # must be between -1000 and +1000
   cash = 0    # goal is $10,000
   orders = []
