@@ -1,9 +1,7 @@
 import client
 from functools import partial
 
-"""
-Calculate market position based off of orders
-"""
+# Calculate market position based off of orders
 def calculate_position(orders):
   stocks = 0
   cash = 0
@@ -20,16 +18,12 @@ def calculate_position(orders):
           cash += price * qty
   return stocks, cash
 
-"""
-Estimate NAV based off of a single symbol and the lastest bid price.
-"""
+# Estimate NAV based off of a single symbol and the lastest bid price.
 def calculate_NAV(total_stocks, total_cash, quoted_bid_price):
   quote_in_dollars = quoted_bid_price / 100.0
   return total_cash + total_stocks * quote_in_dollars
 
-"""
-Return an updated list of orders
-"""
+# Return an updated list of orders
 def update(orders):
   checked_orders = []
   for order in orders:
