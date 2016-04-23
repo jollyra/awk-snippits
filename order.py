@@ -3,9 +3,11 @@ from time import time
 from datetime import datetime
 import client
 import config
+import yaml
 
 
 def order(qty, price, direction):
+  config = yaml.load(config)
   order = {
     'account': config.account,
     'venue': config.venue,
