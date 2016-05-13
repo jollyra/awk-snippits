@@ -7,20 +7,26 @@ import config
 
 
 def market_maker():
-  stocks = 0  # must be between -1000 and +1000
-  cash = 0    # goal is $10,000
   orders = []
 
   while True:
     print('round start')
-    orders = position.update(orders)  # check the status of orders
-    stocks, cash = position.calculate_position(orders)  # determine market position
-    print('stocks %s' % stocks)
-    print('cash %s' % position.cash_to_str(cash))
-    print('# of orders %s' % len(orders))
-    orders.append(order.buy(25, ask_price - 20))
-    orders.append(order.sell(25, bid_price + 20))
-    orders.cancel_cold_orders(orders, 10);
+    orders = position.update(orders)  # update status of orders
+    pos = 0                           # calculate market position
+    asks = 0                          # calculate number of open asks
+    bids = 0                          # calculate number of open bids
+    if pos + bids > asks:
+      pass                            # place an ask for a good price
+    else:
+      pass                            # place a bid for a good price
+    # Additional constraint: pos + bids - asks <= 100 because we don't want to end up too long or short.
+
+    # print('stocks %s' % stocks)
+    # print('cash %s' % position.cash_to_str(cash))
+    # print('# of orders %s' % len(orders))
+    # orders.append(order.buy(25, ask_price - 20))
+    # orders.append(order.sell(25, bid_price + 20))
+    # orders.cancel_cold_orders(orders, 10);
     sleep(6) # in seconds
     print('round end\n')
 
